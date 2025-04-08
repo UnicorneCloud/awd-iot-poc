@@ -23,7 +23,7 @@ def handle_iot_message(event, context):
         'statusCode': 400,
         'body': 'No pickled data provided.'
       }
-    
+
     # Decode the base64-encoded pickled data
     try:
       decoded_data = base64.b64decode(pickled_data)
