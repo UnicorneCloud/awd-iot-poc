@@ -1,0 +1,402 @@
+{
+  "app": "npx tsx bin/create-infra.ts",
+  "versionReporting": false,
+  "context": {
+    "@aws-cdk/aws-apigateway:usagePlanKeyOrderInsensitiveId": true,
+    "@aws-cdk/core:stackRelativeExports": true,
+    "@aws-cdk/aws-rds:lowercaseDbIdentifier": true,
+    "@aws-cdk/aws-lambda:recognizeVersionProps": true,
+    "@aws-cdk/aws-iam:minimizePolicies": true,
+    "dev": {
+      "accountId": "189111709157",
+      "region": "ca-central-1",
+      "lumigoExtensionArn": "arn:aws:lambda:ca-central-1:114300393969:layer:lumigo-extension:3",
+      "lumigoLayerArn": "arn:aws:lambda:ca-central-1:114300393969:layer:lumigo-node-tracer:235",
+      "parametersAndSecretsLambdaExtensionArn": "arn:aws:lambda:ca-central-1:200266452380:layer:AWS-Parameters-and-Secrets-Lambda-Extension:2",
+      "slackWebhookUrl": "https://hooks.slack.com/services/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",
+      "api": {
+        "domain": "dev.protectionc4.com",
+        "subDomain": "api"
+      },
+      "certificates": {
+        "domainNames": ["dev.protectionc4.com", "review.protectionc4.com"]
+      },
+      "database": {
+        "removalPolicy": "destroy",
+        "pointInTimeRecovery": false
+      },
+      "frontend": {
+        "domainName": "dev.protectionc4.com",
+        "reviewDomainName": "review.protectionc4.com"
+      },
+      "email": {
+        "domainName": "dev.protectionc4.com"
+      },
+      "cognito": {
+        "callbackUrls": ["http://localhost:3000", "https://dev.protectionc4.com"],
+        "logoutUrls": ["http://localhost:3000/logout", "https://dev.protectionc4.com/logout"]
+      },
+      "integrations": {
+        "MOZILLA_OBSERVATORY": {
+          "queue": {
+            "maxReceiveCount": 1
+          },
+          "lambda": {
+            "folderName": "mozillaObservatory",
+            "fileName": "create-mozilla-observatory-analysis",
+            "timeout": 900
+          },
+          "environment": {
+            "httpApiEndpoint": "https://http-observatory.security.mozilla.org/api/v1",
+            "tlsApiEndpoint": "https://tls-observatory.services.mozilla.com/api/v1",
+            "mozillaObservatoryStateMachineArnSSMPath": "StepFunctions/MozillaObservatoryStateMachineArn"
+          }
+        },
+        "MICROSOFT_365": {
+          "queue": {
+            "maxReceiveCount": 5,
+            "batchSize": 1
+          },
+          "lambda": {
+            "folderName": "microsoft365",
+            "fileName": "create-microsoft-365-analysis",
+            "timeout": 300,
+            "reservedConcurrentExecutions": 1
+          },
+          "environment": {
+            "httpApiEndpoint": "https://graph.microsoft.com",
+            "loginEndpoint": "https://login.microsoftonline.com",
+            "clientId": "bf7a1c11-5b93-44c9-8300-a3f0b8ad432f"
+          },
+          "secrets": ["microsoft-365-client-secret"]
+        }
+      }
+    },
+    "dev1": {
+      "accountId": "189111709157",
+      "region": "ca-central-1",
+      "lumigoExtensionArn": "arn:aws:lambda:ca-central-1:114300393969:layer:lumigo-extension:3",
+      "lumigoLayerArn": "arn:aws:lambda:ca-central-1:114300393969:layer:lumigo-node-tracer:235",
+      "parametersAndSecretsLambdaExtensionArn": "arn:aws:lambda:ca-central-1:200266452380:layer:AWS-Parameters-and-Secrets-Lambda-Extension:2",
+      "slackWebhookUrl": "https://hooks.slack.com/services/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",
+      "api": {
+        "domain": "dev1.protectionc4.com",
+        "subDomain": "api"
+      },
+      "certificates": {
+        "domainNames": ["dev1.protectionc4.com"]
+      },
+      "database": {
+        "removalPolicy": "destroy",
+        "pointInTimeRecovery": false
+      },
+      "frontend": {
+        "domainName": "dev1.protectionc4.com"
+      },
+      "email": {
+        "domainName": "dev1.protectionc4.com"
+      },
+      "cognito": {
+        "callbackUrls": ["https://dev1.protectionc4.com"],
+        "logoutUrls": ["https://dev1.protectionc4.com/logout"]
+      },
+      "integrations": {
+        "MOZILLA_OBSERVATORY": {
+          "queue": {
+            "maxReceiveCount": 1
+          },
+          "lambda": {
+            "folderName": "mozillaObservatory",
+            "fileName": "create-mozilla-observatory-analysis",
+            "timeout": 900
+          },
+          "environment": {
+            "httpApiEndpoint": "https://http-observatory.security.mozilla.org/api/v1",
+            "tlsApiEndpoint": "https://tls-observatory.services.mozilla.com/api/v1",
+            "mozillaObservatoryStateMachineArnSSMPath": "StepFunctions/MozillaObservatoryStateMachineArn"
+          }
+        },
+        "MICROSOFT_365": {
+          "queue": {
+            "maxReceiveCount": 5,
+            "batchSize": 1
+          },
+          "lambda": {
+            "folderName": "microsoft365",
+            "fileName": "create-microsoft-365-analysis",
+            "timeout": 300,
+            "reservedConcurrentExecutions": 1
+          },
+          "environment": {
+            "httpApiEndpoint": "https://graph.microsoft.com",
+            "loginEndpoint": "https://login.microsoftonline.com",
+            "clientId": "bf7a1c11-5b93-44c9-8300-a3f0b8ad432f"
+          },
+          "secrets": ["microsoft-365-client-secret"]
+        }
+      }
+    },
+    "dev2": {
+      "accountId": "189111709157",
+      "region": "ca-central-1",
+      "lumigoExtensionArn": "arn:aws:lambda:ca-central-1:114300393969:layer:lumigo-extension:3",
+      "lumigoLayerArn": "arn:aws:lambda:ca-central-1:114300393969:layer:lumigo-node-tracer:235",
+      "parametersAndSecretsLambdaExtensionArn": "arn:aws:lambda:ca-central-1:200266452380:layer:AWS-Parameters-and-Secrets-Lambda-Extension:2",
+      "slackWebhookUrl": "https://hooks.slack.com/services/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",
+      "api": {
+        "domain": "dev2.protectionc4.com",
+        "subDomain": "api"
+      },
+      "certificates": {
+        "domainNames": ["dev2.protectionc4.com"]
+      },
+      "database": {
+        "removalPolicy": "destroy",
+        "pointInTimeRecovery": false
+      },
+      "frontend": {
+        "domainName": "dev2.protectionc4.com"
+      },
+      "email": {
+        "domainName": "dev2.protectionc4.com"
+      },
+      "cognito": {
+        "callbackUrls": ["https://dev2.protectionc4.com"],
+        "logoutUrls": ["https://dev2.protectionc4.com/logout"]
+      },
+      "integrations": {
+        "MOZILLA_OBSERVATORY": {
+          "queue": {
+            "maxReceiveCount": 1
+          },
+          "lambda": {
+            "folderName": "mozillaObservatory",
+            "fileName": "create-mozilla-observatory-analysis",
+            "timeout": 900
+          },
+          "environment": {
+            "httpApiEndpoint": "https://http-observatory.security.mozilla.org/api/v1",
+            "tlsApiEndpoint": "https://tls-observatory.services.mozilla.com/api/v1",
+            "mozillaObservatoryStateMachineArnSSMPath": "StepFunctions/MozillaObservatoryStateMachineArn"
+          }
+        },
+        "MICROSOFT_365": {
+          "queue": {
+            "maxReceiveCount": 5,
+            "batchSize": 1
+          },
+          "lambda": {
+            "folderName": "microsoft365",
+            "fileName": "create-microsoft-365-analysis",
+            "timeout": 300,
+            "reservedConcurrentExecutions": 1
+          },
+          "environment": {
+            "httpApiEndpoint": "https://graph.microsoft.com",
+            "loginEndpoint": "https://login.microsoftonline.com",
+            "clientId": "bf7a1c11-5b93-44c9-8300-a3f0b8ad432f"
+          },
+          "secrets": ["microsoft-365-client-secret"]
+        }
+      }
+    },
+    "dev3": {
+      "accountId": "189111709157",
+      "region": "ca-central-1",
+      "lumigoExtensionArn": "arn:aws:lambda:ca-central-1:114300393969:layer:lumigo-extension:3",
+      "lumigoLayerArn": "arn:aws:lambda:ca-central-1:114300393969:layer:lumigo-node-tracer:235",
+      "parametersAndSecretsLambdaExtensionArn": "arn:aws:lambda:ca-central-1:200266452380:layer:AWS-Parameters-and-Secrets-Lambda-Extension:2",
+      "slackWebhookUrl": "https://hooks.slack.com/services/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",
+      "api": {
+        "domain": "dev3.protectionc4.com",
+        "subDomain": "api"
+      },
+      "certificates": {
+        "domainNames": ["dev3.protectionc4.com"]
+      },
+      "database": {
+        "removalPolicy": "destroy",
+        "pointInTimeRecovery": false
+      },
+      "frontend": {
+        "domainName": "dev3.protectionc4.com"
+      },
+      "email": {
+        "domainName": "dev3.protectionc4.com"
+      },
+      "cognito": {
+        "callbackUrls": ["https://dev3.protectionc4.com"],
+        "logoutUrls": ["https://dev3.protectionc4.com/logout"]
+      },
+      "integrations": {
+        "MOZILLA_OBSERVATORY": {
+          "queue": {
+            "maxReceiveCount": 1
+          },
+          "lambda": {
+            "folderName": "mozillaObservatory",
+            "fileName": "create-mozilla-observatory-analysis",
+            "timeout": 900
+          },
+          "environment": {
+            "httpApiEndpoint": "https://http-observatory.security.mozilla.org/api/v1",
+            "tlsApiEndpoint": "https://tls-observatory.services.mozilla.com/api/v1",
+            "mozillaObservatoryStateMachineArnSSMPath": "StepFunctions/MozillaObservatoryStateMachineArn"
+          }
+        },
+        "MICROSOFT_365": {
+          "queue": {
+            "maxReceiveCount": 5,
+            "batchSize": 1
+          },
+          "lambda": {
+            "folderName": "microsoft365",
+            "fileName": "create-microsoft-365-analysis",
+            "timeout": 300,
+            "reservedConcurrentExecutions": 1
+          },
+          "environment": {
+            "httpApiEndpoint": "https://graph.microsoft.com",
+            "loginEndpoint": "https://login.microsoftonline.com",
+            "clientId": "bf7a1c11-5b93-44c9-8300-a3f0b8ad432f"
+          },
+          "secrets": ["microsoft-365-client-secret"]
+        }
+      }
+    },
+    "staging": {
+      "accountId": "400870010994",
+      "region": "ca-central-1",
+      "lumigoExtensionArn": "arn:aws:lambda:ca-central-1:114300393969:layer:lumigo-extension:3",
+      "lumigoLayerArn": "arn:aws:lambda:ca-central-1:114300393969:layer:lumigo-node-tracer:235",
+      "parametersAndSecretsLambdaExtensionArn": "arn:aws:lambda:ca-central-1:200266452380:layer:AWS-Parameters-and-Secrets-Lambda-Extension:2",
+      "slackWebhookUrl": "https://hooks.slack.com/services/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",
+      "api": {
+        "domain": "staging.protectionc4.com",
+        "subDomain": "api"
+      },
+      "certificates": {
+        "domainNames": ["staging.protectionc4.com"]
+      },
+      "database": {
+        "removalPolicy": "destroy",
+        "pointInTimeRecovery": false
+      },
+      "frontend": {
+        "domainName": "staging.protectionc4.com"
+      },
+      "email": {
+        "domainName": "staging.protectionc4.com"
+      },
+      "cognito": {
+        "callbackUrls": ["https://staging.protectionc4.com"],
+        "logoutUrls": ["https://staging.protectionc4.com/logout"]
+      },
+      "integrations": {
+        "MOZILLA_OBSERVATORY": {
+          "queue": {
+            "maxReceiveCount": 1
+          },
+          "lambda": {
+            "folderName": "mozillaObservatory",
+            "fileName": "create-mozilla-observatory-analysis",
+            "timeout": 900
+          },
+          "environment": {
+            "httpApiEndpoint": "https://http-observatory.security.mozilla.org/api/v1",
+            "tlsApiEndpoint": "https://tls-observatory.services.mozilla.com/api/v1",
+            "mozillaObservatoryStateMachineArnSSMPath": "StepFunctions/MozillaObservatoryStateMachineArn"
+          }
+        },
+        "MICROSOFT_365": {
+          "queue": {
+            "maxReceiveCount": 5,
+            "batchSize": 1
+          },
+          "lambda": {
+            "folderName": "microsoft365",
+            "fileName": "create-microsoft-365-analysis",
+            "timeout": 300,
+            "reservedConcurrentExecutions": 1
+          },
+          "environment": {
+            "httpApiEndpoint": "https://graph.microsoft.com",
+            "loginEndpoint": "https://login.microsoftonline.com",
+            "clientId": "897e02a8-47ec-4b93-9346-149ad397188b"
+          },
+          "secrets": ["microsoft-365-client-secret"]
+        }
+      }
+    },
+    "prod": {
+      "accountId": "228519261842",
+      "region": "ca-central-1",
+      "lumigoExtensionArn": "arn:aws:lambda:ca-central-1:114300393969:layer:lumigo-extension:3",
+      "lumigoLayerArn": "arn:aws:lambda:ca-central-1:114300393969:layer:lumigo-node-tracer:235",
+      "parametersAndSecretsLambdaExtensionArn": "arn:aws:lambda:ca-central-1:200266452380:layer:AWS-Parameters-and-Secrets-Lambda-Extension:2",
+      "slackWebhookUrl": "https://hooks.slack.com/services/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",
+      "api": {
+        "domain": "protectionc4.com",
+        "subDomain": "api"
+      },
+      "certificates": {
+        "domainNames": ["protectionc4.com"]
+      },
+      "database": {
+        "removalPolicy": "retain",
+        "pointInTimeRecovery": true
+      },
+      "frontend": {
+        "domainName": "protectionc4.com",
+        "subDomain": "app",
+        "redirectDomainNames": ["protectionc4.ca", "c4protection.com", "c4protection.ca"]
+      },
+      "email": {
+        "domainName": "protectionc4.com"
+      },
+      "cognito": {
+        "callbackUrls": ["https://app.protectionc4.com"],
+        "logoutUrls": ["https://app.protectionc4.com/logout"]
+      },
+      "cdn": {
+        "domain": "protectionc4.com",
+        "subDomain": "cdn"
+      },
+      "integrations": {
+        "MOZILLA_OBSERVATORY": {
+          "queue": {
+            "maxReceiveCount": 1
+          },
+          "lambda": {
+            "folderName": "mozillaObservatory",
+            "fileName": "create-mozilla-observatory-analysis",
+            "timeout": 900
+          },
+          "environment": {
+            "httpApiEndpoint": "https://http-observatory.security.mozilla.org/api/v1",
+            "tlsApiEndpoint": "https://tls-observatory.services.mozilla.com/api/v1",
+            "mozillaObservatoryStateMachineArnSSMPath": "StepFunctions/MozillaObservatoryStateMachineArn"
+          }
+        },
+        "MICROSOFT_365": {
+          "queue": {
+            "maxReceiveCount": 5,
+            "batchSize": 1
+          },
+          "lambda": {
+            "folderName": "microsoft365",
+            "fileName": "create-microsoft-365-analysis",
+            "timeout": 300,
+            "reservedConcurrentExecutions": 1
+          },
+          "environment": {
+            "httpApiEndpoint": "https://graph.microsoft.com",
+            "loginEndpoint": "https://login.microsoftonline.com",
+            "clientId": "950dfbc6-3cdd-466d-9512-d32ec2908edc"
+          },
+          "secrets": ["microsoft-365-client-secret"]
+        }
+      }
+    }
+  }
+}

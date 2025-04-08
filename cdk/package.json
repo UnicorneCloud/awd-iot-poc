@@ -1,0 +1,60 @@
+{
+  "name": "c4-protection-backend-infra",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "create-infra": "bin/create-infra.js"
+  },
+  "engines": {
+    "node": "^22",
+    "npm": "⚠️ Please use yarn instead of npm ⚠️",
+    "yarn": ">= 1.22"
+  },
+  "scripts": {
+    "lint": "yarn lint:ts && yarn lint:eslint && yarn lint:prettier",
+    "lint:fix": "yarn lint:ts && yarn lint:eslint:fix && yarn lint:prettier:fix",
+    "lint:ts": "tsc --noEmit",
+    "lint:eslint": "eslint \"./**/*.ts\" --quiet",
+    "lint:eslint:fix": "eslint \"./**/*.ts\" --fix",
+    "lint:prettier": "prettier --check .",
+    "lint:prettier:fix": "prettier --write .",
+    "clean-build": "rm -rf ./build",
+    "build": "tsc",
+    "watch": "tsc -w",
+    "diff": "aws-vault exec hackathon -- cdk diff -c envName=dev",
+    "deploy": "aws-vault exec hackathon -- cdk deploy -c envName=dev"
+  },
+  "devDependencies": {
+    "@eslint/compat": "^1.2.4",
+    "@eslint/eslintrc": "^3.2.0",
+    "@eslint/js": "^9.17.0",
+    "@types/mjml": "^4.7.4",
+    "@types/node": "^22.10.5",
+    "@typescript-eslint/eslint-plugin": "^8.19.1",
+    "@typescript-eslint/parser": "^8.19.1",
+    "aws-cdk": "2.175.0",
+    "esbuild": "^0.24.2",
+    "eslint": "^9.17.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-airbnb-typescript": "^18.0.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "prettier": "^3.4.2",
+    "tsconfig-paths": "^4.2.0",
+    "tsx": "4.19.2",
+    "typescript": "^5.7.3",
+    "typescript-transform-paths": "^3.5.3"
+  },
+  "dependencies": {
+    "aws-cdk-lib": "2.188.0",
+    "constructs": "^10.4.2",
+    "lodash": "^4.17.21",
+    "source-map-support": "^0.5.21"
+  },
+  "volta": {
+    "node": "22.14.0",
+    "yarn": "4.8.1"
+  }
+}
