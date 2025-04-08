@@ -32,7 +32,7 @@ def publish_iot_message(endpoint_url, topic, root_cert, cert_pem, private_pem):
   # Define headers
   headers = {
     'Content-Type': 'application/octet-stream',
-    'Content-Type': 'application/json'
+    # 'Content-Type': 'application/json'
   }
 
   # Send the request
@@ -43,7 +43,8 @@ def publish_iot_message(endpoint_url, topic, root_cert, cert_pem, private_pem):
     publish = requests.request('POST',
                 publish_url,
                 headers=headers,
-                data=json.dumps(message).encode('utf-8'),
+                # data=json.dumps(message).encode('utf-8'),
+                data=pickled_message,
                 verify=root_cert,
                 cert=(cert_pem, private_pem)
               )
