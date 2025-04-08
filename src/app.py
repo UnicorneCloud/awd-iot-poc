@@ -1,12 +1,15 @@
-import boto3
+from chalice import Chalice
 import pickle
 import logging
+
+app = Chalice(app_name='iot-poc')
 
 # Set up logging
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
-def lambda_handler(event, context):
+@app.lambda_function()
+def handle_iot_message(event, context):
   """
   AWS Lambda function to process a pickled Python serialization from an IoT message.
   """

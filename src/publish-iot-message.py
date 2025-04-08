@@ -1,5 +1,4 @@
 import pickle
-import json
 import random
 import time
 import requests
