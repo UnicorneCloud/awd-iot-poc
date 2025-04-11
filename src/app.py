@@ -6,6 +6,7 @@ import boto3
 import json
 import secrets
 import uuid
+import os
 from db import DeviceDB
 
 app = Chalice(app_name='iot-poc')
@@ -14,11 +15,12 @@ app = Chalice(app_name='iot-poc')
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
-# Initialize in-memory database for devices
+# Initialize database for devices
 device_db = DeviceDB()
 
 # Initialize IoT client
 iot_client = boto3.client('iot')
+
 
 @app.lambda_function()
 def handle_iot_message(event, context):
@@ -75,6 +77,8 @@ def register_device():
     - secret_key: Pre-shared secret key given to device at shipping time
     """
     try:
+        print("Registering device...")
+        print("Request body:", app.current_request.json_body)
         request_body = app.current_request.json_body
         
         if not request_body or 'device_id' not in request_body or 'secret_key' not in request_body:
@@ -203,6 +207,8 @@ def seed_device():
     In production, this would be replaced with a more secure provisioning process.
     """
     try:
+        print("Seeding device...")
+        print("Request body:", app.current_request.json_body)
         request_body = app.current_request.json_body
         
         if not request_body or 'device_id' not in request_body:

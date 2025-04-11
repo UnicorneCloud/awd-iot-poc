@@ -21,3 +21,8 @@ cdk.out
 coverage/
 
 /src/perm_files
+
+.cert
+.crt
+.pem
+.key

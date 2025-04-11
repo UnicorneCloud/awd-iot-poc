@@ -2,12 +2,18 @@ import * as cdk from 'aws-cdk-lib'
 import * as lambda from 'aws-cdk-lib/aws-lambda'
 import * as iam from 'aws-cdk-lib/aws-iam'
 import * as apigateway from 'aws-cdk-lib/aws-apigateway'
-import * as path from 'path'
+import * as dynamodb from 'aws-cdk-lib/aws-dynamodb'
 import { pythonBundlingOptions } from './base'
 
+export interface IIotComputeStackProps extends cdk.StackProps {
+  devicesTable: dynamodb.ITable
+}
+
 export class IotComputeStack extends cdk.Stack {
-  constructor(scope: cdk.App, id: string, props?: cdk.StackProps) {
+  constructor(scope: cdk.App, id: string, props: IIotComputeStackProps) {
     super(scope, id, props)
+
+    const { devicesTable } = props
 
     const lambdaPythonVendorsLayer = new lambda.LayerVersion(this, 'iot-poc-python-vendors', {
       code: lambda.Code.fromAsset('../src', {
@@ -32,23 +38,34 @@ export class IotComputeStack extends cdk.Stack {
       timeout: cdk.Duration.seconds(60),
     }
 
-    // Define a Python Lambda function
+    // Define a Python Lambda function for IoT message processing
     const iotProcessingFunction = new lambda.Function(this, 'process-iot-message', {
       ...defaultLambdaProps,
-      handler: 'app.handle_iot_message', // Specify the handler function
+      handler: 'app.handle_iot_message',
     })
+    devicesTable.grantFullAccess(iotProcessingFunction)
 
-    // Create the API Lambda function
-    const apiFunction = new lambda.Function(this, 'iot-api', {
+    // Create separate lambda functions for each API operation
+    const registerDeviceFunction = new lambda.Function(this, 'register-device', {
       ...defaultLambdaProps,
-      handler: 'app.app', // Chalice app handler
+      handler: 'app.app',
       environment: {
-        STAGE: 'prod', // Chalice environment variable
+        STAGE: 'prod',
       },
     })
+    devicesTable.grantFullAccess(registerDeviceFunction)
 
-    // Add IoT permissions to the API Lambda
-    apiFunction.addToRolePolicy(
+    const seedDeviceFunction = new lambda.Function(this, 'seed-device', {
+      ...defaultLambdaProps,
+      handler: 'app.app',
+      environment: {
+        STAGE: 'prod',
+      },
+    })
+    devicesTable.grantFullAccess(seedDeviceFunction)
+
+    // Add IoT permissions to the register device Lambda
+    registerDeviceFunction.addToRolePolicy(
       new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,
         actions: [
@@ -64,15 +81,34 @@ export class IotComputeStack extends cdk.Stack {
       }),
     )
 
-    // Create API Gateway REST API with API key required
-    const api = new apigateway.LambdaRestApi(this, 'iot-rest-api', {
-      handler: apiFunction,
-      proxy: true,
+    // Create API Gateway REST API (not using proxy integration)
+    const api = new apigateway.RestApi(this, 'iot-rest-api', {
+      restApiName: 'IoT Device API',
+      description: 'API for IoT device registration',
       deployOptions: {
         stageName: 'api',
       },
-      description: 'API for IoT device registration',
-      apiKeySourceType: apigateway.ApiKeySourceType.HEADER, // API key will be provided in the header
+      // Enable API key
+      apiKeySourceType: apigateway.ApiKeySourceType.HEADER,
+      defaultCorsPreflightOptions: {
+        allowHeaders: ['Authorization', 'Content-Type', 'X-Amz-Date', 'X-Amz-Security-Token', 'X-Api-Key'],
+        allowMethods: apigateway.Cors.ALL_METHODS,
+        allowOrigins: ['*'],
+      },
+    })
+
+    // Add resources and methods to the API
+    const registerResource = api.root.addResource('register-device')
+    const seedResource = api.root.addResource('seed-device')
+
+    // Add POST method to register-device resource
+    registerResource.addMethod('POST', new apigateway.LambdaIntegration(registerDeviceFunction), {
+      apiKeyRequired: true, // Require API key for this method
+    })
+
+    // Add POST method to seed-device resource
+    seedResource.addMethod('POST', new apigateway.LambdaIntegration(seedDeviceFunction), {
+      apiKeyRequired: true, // Require API key for this method
     })
 
     // Create API key
@@ -92,7 +128,6 @@ export class IotComputeStack extends cdk.Stack {
           stage: api.deploymentStage,
         },
       ],
-      // Optional: Set quota and throttling limits
       quota: {
         limit: 1000,
         period: apigateway.Period.MONTH,

@@ -23,7 +23,7 @@
     "build": "tsc",
     "watch": "tsc -w",
     "diff": "aws-vault exec hackathon -- cdk diff -c envName=dev",
-    "deploy": "aws-vault exec hackathon -- cdk deploy -c envName=dev"
+    "deploy": "aws-vault exec hackathon -- cdk deploy '*' -c envName=dev"
   },
   "devDependencies": {
     "@eslint/compat": "^1.2.4",

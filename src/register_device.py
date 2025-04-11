@@ -60,7 +60,9 @@ def register_device(api_url, api_key, device_id):
         raise Exception(error_msg)
     
     seed_result = seed_response.json()
-    secret_key = seed_result.get("secret_key")
+    response_body = json.loads(seed_result.get("body"))
+    print("Body:", response_body)
+    secret_key = response_body.get("secret_key")
     
     if not secret_key:
         error_msg = "No secret key returned from seeding operation"
@@ -82,6 +84,7 @@ def register_device(api_url, api_key, device_id):
         headers=headers,
         json=register_data
     )
+    print("Register Response:", register_response.json())
     
     if register_response.status_code != 200:
         error_msg = f"Failed to register device: {register_response.text}"
