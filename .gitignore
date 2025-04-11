@@ -22,7 +22,8 @@ coverage/
 
 /src/perm_files
 
-.cert
-.crt
-.pem
-.key
+*.cert
+*.crt
+*.pem
+*.key
+*.thing.config.json

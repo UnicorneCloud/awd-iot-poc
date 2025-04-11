@@ -91,8 +91,9 @@ def register_device(api_url, api_key, device_id):
         logger.error(error_msg)
         raise Exception(error_msg)
     
+    body = json.loads(register_response.json().get("body"))
     logger.info("Device registered successfully")
-    return register_response.json()
+    return body
 
 def save_certificates(registration_data, device_id, output_dir):
     """
@@ -143,7 +144,7 @@ def save_certificates(registration_data, device_id, output_dir):
         "root_ca_path": "root-CA.crt"
     }
     
-    with open(os.path.join(cert_dir, "config.json"), "w") as f:
+    with open(os.path.join(cert_dir, f"{device_id}.thing.config.json"), "w") as f:
         json.dump(config, f, indent=4)
     
     return cert_dir

@@ -53,6 +53,7 @@ export class IotComputeStack extends cdk.Stack {
       ...defaultLambdaProps,
       handler: 'app.app',
       environment: {
+        ...defaultLambdaProps.environment,
         STAGE: 'prod',
       },
     })
@@ -62,6 +63,7 @@ export class IotComputeStack extends cdk.Stack {
       ...defaultLambdaProps,
       handler: 'app.app',
       environment: {
+        ...defaultLambdaProps.environment,
         STAGE: 'prod',
       },
     })

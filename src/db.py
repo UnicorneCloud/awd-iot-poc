@@ -39,7 +39,7 @@ class DeviceDB:
                 return False
             
             # Add new device
-            current_time = datetime.now(datetime.timezone.utc).isoformat()
+            current_time = datetime.now().isoformat()
             self.table.put_item(
                 Item={
                     'device_id': device_id,
@@ -107,7 +107,7 @@ class DeviceDB:
                 return False
             
             # Update device registration status
-            current_time = datetime.now(datetime.timezone.utc).isoformat()
+            current_time = datetime.now().isoformat()
             self.table.update_item(
                 Key={'device_id': device_id},
                 UpdateExpression="SET registration_status = :status, thing_name = :thing_name, registered_at = :time",
