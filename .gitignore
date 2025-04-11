@@ -20,8 +20,6 @@ cdk.out
 # Code coverage
 coverage/
 
-/src/perm_files
-
 *.cert
 *.crt
 *.pem

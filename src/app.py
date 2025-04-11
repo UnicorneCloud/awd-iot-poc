@@ -144,8 +144,9 @@ def register_device():
                             "iot:Receive"
                         ],
                         "Resource": [
-                            f"arn:aws:iot:*:*:topic/device/{device_id}/*",
-                            f"arn:aws:iot:*:*:client/{thing_name}"
+                            # this should be more restrictive (respect least privilege)
+                            f"arn:aws:iot:*:*:topic/*",
+                            f"arn:aws:iot:*:*:client/*"
                         ]
                     }
                 ]
