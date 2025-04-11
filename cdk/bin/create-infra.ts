@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import 'source-map-support/register'
 import * as cdk from 'aws-cdk-lib'
-import { DynamoDbStack, IotComputeStack } from '../lib'
+import { DynamoDbStack, IotComputeStack, IoTCoreStack } from '../lib'
 
 const app = new cdk.App()
 const rawEnvName = app.node.tryGetContext('envName')
@@ -16,6 +16,10 @@ const dynamoDbStack = new DynamoDbStack(app, 'IotPocDynamoDbStack', {
 })
 
 // Create the IoT Compute stack with access to the DynamoDB table
-new IotComputeStack(app, 'IotComputeStack', {
+const computeStack = new IotComputeStack(app, 'IotComputeStack', {
   devicesTable: dynamoDbStack.devicesTable,
+})
+
+new IoTCoreStack(app, 'IotCoreStack', {
+  rawDataProcessingLambda: computeStack.iotProcessingFunction,
 })

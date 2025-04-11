@@ -10,6 +10,8 @@ export interface IIotComputeStackProps extends cdk.StackProps {
 }
 
 export class IotComputeStack extends cdk.Stack {
+  public readonly iotProcessingFunction: lambda.IFunction
+
   constructor(scope: cdk.App, id: string, props: IIotComputeStackProps) {
     super(scope, id, props)
 
@@ -43,14 +45,14 @@ export class IotComputeStack extends cdk.Stack {
     }
 
     // Define a Python Lambda function for IoT message processing
-    const iotProcessingFunction = new lambda.Function(this, 'process-iot-message', {
+    this.iotProcessingFunction = new lambda.Function(this, 'process-iot-message', {
       ...defaultLambdaProps,
       handler: 'app.handle_iot_message',
     })
-    devicesTable.grantFullAccess(iotProcessingFunction)
+    devicesTable.grantFullAccess(this.iotProcessingFunction)
 
     // Add IoT Core publish permissions to the IoT processing Lambda
-    iotProcessingFunction.addToRolePolicy(
+    this.iotProcessingFunction.addToRolePolicy(
       new iam.PolicyStatement({
         effect: iam.Effect.ALLOW,
         actions: ['iot:Publish'],
