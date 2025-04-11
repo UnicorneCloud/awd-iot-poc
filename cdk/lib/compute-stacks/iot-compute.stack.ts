@@ -36,6 +36,9 @@ export class IotComputeStack extends cdk.Stack {
       memorySize: 1769,
       runtime: lambda.Runtime.PYTHON_3_13,
       timeout: cdk.Duration.seconds(60),
+      environment: {
+        DEVICES_TABLE_NAME: devicesTable.tableName,
+      },
     }
 
     // Define a Python Lambda function for IoT message processing

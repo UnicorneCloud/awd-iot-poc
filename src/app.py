@@ -222,7 +222,13 @@ def seed_device():
         secret_key = secrets.token_hex(16)
         
         # Add to database
-        device_db.add_device(device_id, secret_key)
+        status = device_db.add_device(device_id, secret_key)
+
+        if not status:
+          return {
+            'statusCode': 400,
+            'body': json.dumps({'error': 'Failed to add device to database'})
+          }
         
         return {
             'statusCode': 200,
