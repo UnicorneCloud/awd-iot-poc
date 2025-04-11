@@ -48,6 +48,15 @@ export class IotComputeStack extends cdk.Stack {
     })
     devicesTable.grantFullAccess(iotProcessingFunction)
 
+    // Add IoT Core publish permissions to the IoT processing Lambda
+    iotProcessingFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ['iot:Publish'],
+        resources: ['arn:aws:iot:*:*:topic/*'], // Adjust the topic ARN as needed for your use case
+      }),
+    )
+
     // Create separate lambda functions for each API operation
     const registerDeviceFunction = new lambda.Function(this, 'register-device', {
       ...defaultLambdaProps,

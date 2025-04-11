@@ -44,9 +44,30 @@ def handle_iot_message(event, context):
       deserialized_data = pickle.loads(decoded_data)
       logger.info("Deserialized data: %s", deserialized_data)
 
+      # Get IoT Core endpoint from environment variable
+      iot_endpoint = os.environ.get('IOT_CORE_ENDPOINT')
+      if not iot_endpoint:
+        logger.error("IOT_CORE_ENDPOINT environment variable not set")
+        return {
+          'statusCode': 500,
+          'body': 'IoT Core endpoint configuration missing'
+        }
+      
+      # Create an IoT data client using the endpoint
+      iot_data_client = boto3.client('iot-data', endpoint_url=f'https://{iot_endpoint}')
+      
+      # Publish message to IoT Core with topic temperatures/json
+      publish_response = iot_data_client.publish(
+          topic='temperatures/json',
+          qos=1,
+          payload=json.dumps(deserialized_data)
+      )
+      
+      logger.info("Published message to IoT Core: %s", publish_response)
+
       return {
         'statusCode': 200,
-        'body': 'Message processed successfully.'
+        'body': 'Message processed successfully and published to IoT Core.'
       }
     except TypeError as e:
       logger.error("Base64 decoding error: %s", e)
