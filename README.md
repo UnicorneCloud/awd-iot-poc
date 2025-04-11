@@ -1,1 +1,1 @@
-# awd-iot-poc
+# aws-iot-poc
