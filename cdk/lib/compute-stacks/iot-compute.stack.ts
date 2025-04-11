@@ -38,6 +38,7 @@ export class IotComputeStack extends cdk.Stack {
       timeout: cdk.Duration.seconds(60),
       environment: {
         DEVICES_TABLE_NAME: devicesTable.tableName,
+        IOT_CORE_ENDPOINT: 'a3o7h8u7phyoa3-ats.iot.ca-central-1.amazonaws.com',
       },
     }
 
